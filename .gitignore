@@ -4,4 +4,4 @@
 .DS_Store?
 
 # Python compiled files
-.pyc
+*.pyc
