@@ -2,6 +2,7 @@ from django import forms
 from .models import Account, Currency
 from .fields import CurrencyField, TagsField
 
+# Only used in conjunction with Bootstrap 3
 class PaymentForm(forms.Form):
     account = forms.ModelChoiceField(queryset=Account.objects.all())
     currency = forms.ModelChoiceField(queryset=Currency.objects.all(), required=False)

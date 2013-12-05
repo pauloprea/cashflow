@@ -3,6 +3,7 @@ from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModel
 from models import Account, Currency, \
     AccountOperation, Payment, Income, TransferIn, TransferOut
 
+
 class CurrencyAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
 
@@ -21,15 +22,6 @@ class AccountAdmin(admin.ModelAdmin):
 
     def user_fullname(self, obj):
         return obj.user.get_full_name()
-
-    def get_urls(self):
-        urls = super(AccountAdmin, self).get_urls()
-        print urls
-        return urls
-
-    def my_view(self, request):
-        # custom view which should return an HttpResponse
-        pass
 
 
 class IncomeAdmin(PolymorphicChildModelAdmin):
@@ -75,7 +67,6 @@ class AccountOperationAdmin(PolymorphicParentModelAdmin):
     )
     list_display = ('__unicode__', 'operation_icon')
     change_list_template = "cashflow/accountoperation/change_list.html"
-
 
 
 admin.site.register(Account, AccountAdmin)

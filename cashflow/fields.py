@@ -1,7 +1,7 @@
 from django import forms
 import widgets
 
-
+# Only used in conjunction with Bootstrap 3
 class CurrencyField(forms.DecimalField):
     widget = widgets.InputGroupBootstrap3
 

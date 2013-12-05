@@ -9,6 +9,7 @@ import tagging
 import datetime
 #from taggit.managers import TaggableManager
 
+
 class Currency(models.Model):
     name = models.CharField(max_length=3, verbose_name="Currency name")
     description = models.CharField(max_length=100, verbose_name="Currency description")
@@ -34,6 +35,7 @@ class Account(models.Model):
     def balance(self):
         return self.accountoperation_set.aggregate(models.Sum('amount'))['amount__sum'] or 0
 
+
 class AccountOperation(PolymorphicModel):
     account = models.ForeignKey(Account)
     amount = models.FloatField(verbose_name="Amount")
@@ -49,6 +51,7 @@ class AccountOperation(PolymorphicModel):
         return ''
     operation_icon.short_description = 'Operation'
     operation_icon.allow_tags = True
+
 
 class Payment(AccountOperation):
     currency = models.ForeignKey(Currency, null=True, blank=True)
@@ -74,13 +77,6 @@ class TransferOut(AccountOperation):
     def operation_icon(self):
         return format_html('<span class="glyphicon glyphicon-transfer"></span>'
                            '<span class="glyphicon glyphicon-export"></span>')
-
-#class Transaction(models.Model):
-#    positive = models.ForeignKey(AccountOperation, related_name="positive_op")
-#    negative = models.ForeignKey(AccountOperation, related_name="negative_op")
-#    date = models.DateField()
-#    description = models.CharField(max_length=255, verbose_name="Details", null=True, blank=True)
-
 
 
 

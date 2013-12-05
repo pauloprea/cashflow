@@ -15,7 +15,7 @@ ADDON_POSITION_SUFFIX = 2
 #  value
 #  type
 #  options
-
+# Only used in conjunction with Bootstrap 3
 class InputGroupBootstrap3(TextInput):
     def render(self, name, value, attrs=None):
         addon = {}
