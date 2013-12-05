@@ -114,6 +114,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'polymorphic',
     'django_admin_bootstrapped',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -125,6 +126,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'tagging',
     'south',
     'cashflow',
 )
@@ -166,9 +168,5 @@ CACHES = {
     }
 }
 
-BRILLIXY_INDEX = {
-    'panels': [
-        'brillixy.panels.AllModelsPanel',
-    ]
-}
-
+LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/login"

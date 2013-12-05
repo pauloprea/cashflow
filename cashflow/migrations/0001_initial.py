@@ -31,11 +31,41 @@ class Migration(SchemaMigration):
         # Adding model 'AccountOperation'
         db.create_table(u'cashflow_accountoperation', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('account', self.gf('django.db.models.fields.related.ForeignKey')(related_name='from_account', to=orm['cashflow.Account'])),
+            ('polymorphic_ctype', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'polymorphic_cashflow.accountoperation_set', null=True, to=orm['contenttypes.ContentType'])),
+            ('account', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cashflow.Account'])),
             ('amount', self.gf('django.db.models.fields.FloatField')()),
+            ('date', self.gf('django.db.models.fields.DateField')(default=datetime.datetime(2013, 12, 2, 0, 0))),
+            ('tags', self.gf('tagging.fields.TagField')(null=True)),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+            ('stamp', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
         db.send_create_signal(u'cashflow', ['AccountOperation'])
+
+        # Adding model 'Payment'
+        db.create_table(u'cashflow_payment', (
+            (u'accountoperation_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cashflow.AccountOperation'], unique=True, primary_key=True)),
+            ('currency', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cashflow.Currency'], null=True, blank=True)),
+            ('currency_amount', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+        ))
+        db.send_create_signal(u'cashflow', ['Payment'])
+
+        # Adding model 'Income'
+        db.create_table(u'cashflow_income', (
+            (u'accountoperation_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cashflow.AccountOperation'], unique=True, primary_key=True)),
+        ))
+        db.send_create_signal(u'cashflow', ['Income'])
+
+        # Adding model 'TransferIn'
+        db.create_table(u'cashflow_transferin', (
+            (u'accountoperation_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cashflow.AccountOperation'], unique=True, primary_key=True)),
+        ))
+        db.send_create_signal(u'cashflow', ['TransferIn'])
+
+        # Adding model 'TransferOut'
+        db.create_table(u'cashflow_transferout', (
+            (u'accountoperation_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cashflow.AccountOperation'], unique=True, primary_key=True)),
+        ))
+        db.send_create_signal(u'cashflow', ['TransferOut'])
 
 
     def backwards(self, orm):
@@ -47,6 +77,18 @@ class Migration(SchemaMigration):
 
         # Deleting model 'AccountOperation'
         db.delete_table(u'cashflow_accountoperation')
+
+        # Deleting model 'Payment'
+        db.delete_table(u'cashflow_payment')
+
+        # Deleting model 'Income'
+        db.delete_table(u'cashflow_income')
+
+        # Deleting model 'TransferIn'
+        db.delete_table(u'cashflow_transferin')
+
+        # Deleting model 'TransferOut'
+        db.delete_table(u'cashflow_transferout')
 
 
     models = {
@@ -91,16 +133,38 @@ class Migration(SchemaMigration):
         },
         u'cashflow.accountoperation': {
             'Meta': {'object_name': 'AccountOperation'},
-            'account': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'from_account'", 'to': u"orm['cashflow.Account']"}),
+            'account': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cashflow.Account']"}),
             'amount': ('django.db.models.fields.FloatField', [], {}),
+            'date': ('django.db.models.fields.DateField', [], {'default': 'datetime.datetime(2013, 12, 2, 0, 0)'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'polymorphic_ctype': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'polymorphic_cashflow.accountoperation_set'", 'null': 'True', 'to': u"orm['contenttypes.ContentType']"}),
+            'stamp': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'tags': ('tagging.fields.TagField', [], {'null': 'True'})
         },
         u'cashflow.currency': {
             'Meta': {'object_name': 'Currency'},
             'description': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '3'})
+        },
+        u'cashflow.income': {
+            'Meta': {'object_name': 'Income', '_ormbases': [u'cashflow.AccountOperation']},
+            u'accountoperation_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cashflow.AccountOperation']", 'unique': 'True', 'primary_key': 'True'})
+        },
+        u'cashflow.payment': {
+            'Meta': {'object_name': 'Payment', '_ormbases': [u'cashflow.AccountOperation']},
+            u'accountoperation_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cashflow.AccountOperation']", 'unique': 'True', 'primary_key': 'True'}),
+            'currency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cashflow.Currency']", 'null': 'True', 'blank': 'True'}),
+            'currency_amount': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'})
+        },
+        u'cashflow.transferin': {
+            'Meta': {'object_name': 'TransferIn', '_ormbases': [u'cashflow.AccountOperation']},
+            u'accountoperation_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cashflow.AccountOperation']", 'unique': 'True', 'primary_key': 'True'})
+        },
+        u'cashflow.transferout': {
+            'Meta': {'object_name': 'TransferOut', '_ormbases': [u'cashflow.AccountOperation']},
+            u'accountoperation_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cashflow.AccountOperation']", 'unique': 'True', 'primary_key': 'True'})
         },
         u'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
