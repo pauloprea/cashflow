@@ -115,6 +115,8 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     'polymorphic',
+    'cashflow',
+    'django_admin_bootstrapped.bootstrap3',
     'django_admin_bootstrapped',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -128,7 +130,6 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'tagging',
     'south',
-    'cashflow',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

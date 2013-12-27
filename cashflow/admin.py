@@ -26,7 +26,11 @@ class AccountAdmin(admin.ModelAdmin):
 
 class IncomeAdmin(PolymorphicChildModelAdmin):
     base_model = AccountOperation
-
+    fieldsets = (
+        ('Income details', {
+            'fields': ('account', 'date', 'amount', 'tags', 'description')
+        }),
+    )
 
 class PaymentAdmin(PolymorphicChildModelAdmin):
     base_model = AccountOperation

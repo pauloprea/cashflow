@@ -2,7 +2,6 @@
 {% load i18n admin_static admin_list bootstrapped_goodies_tags %}
 {% load admin_urls %}
 
-
 {% block object-tools-items %}
 {% endblock %}
 
@@ -20,6 +19,12 @@
         <a href="{% url 'admin:cashflow_payment_add' %}?ct_id=14{% if is_popup %}&_popup=1{% endif %}">
              <span class="badge pull-right"></span>
             Add Payment
+        </a>
+    </li>
+    <li class="panel panel-info">
+        <a href="{% url 'admin:cashflow_transferin_add' %}?ct_id=16{% if is_popup %}&_popup=1{% endif %}">
+             <span class="badge pull-right"></span>
+            Make a transfer
         </a>
     </li>
     {% endif %}
